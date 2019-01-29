@@ -9,3 +9,39 @@ I followed along with [Andrea Bizzotto's](https://www.youtube.com/redirect?redir
 I also got a bit out of the Medium article ["_Flutter : How to do user login with Firebase_"](https://medium.com/flutterpub/flutter-how-to-do-user-login-with-firebase-a6af760b14d5) by David Cheah
 
 David's example is so strikingly similar to Andrea's that I am led to believe he used Andrea's work as a starting point.  There were a few enhancements.  Like adding the icon, using a ListView instead of a Column (which is the way we need to do it to work on Android), and walking through setting up the Firebase <-> Flutter connection for Android.
+## Challenges with Firebase Dart Package
+The most current [Firebase Dart Package](https://pub.dartlang.org/packages/firebase_auth) as I write this is   
+```
+firebase_auth: ^0.8.0+1
+```
+After putting this in pubspec.yaml, I was getting errors building for an Android emulator:  
+```
+Launching lib/main.dart on Android SDK built for x86 in debug mode...
+registerResGeneratingTask is deprecated, use registerGeneratedResFolders(FileCollection)
+registerResGeneratingTask is deprecated, use registerGeneratedResFolders(FileCollection)
+registerResGeneratingTask is deprecated, use registerGeneratedResFolders(FileCollection)
+registerResGeneratingTask is deprecated, use registerGeneratedResFolders(FileCollection)
+registerResGeneratingTask is deprecated, use registerGeneratedResFolders(FileCollection)
+/Users/margaret 1/Flutter/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_auth-0.8.0+1/android/src/main/java/io/flutter/plugins/firebaseauth/FirebaseAuthPlugin.java:9: error: cannot find symbol
+import androidx.annotation.NonNull;
+                          ^
+  symbol:   class NonNull
+  location: package androidx.annotation
+```        
+The "deprecated" warnings I ignored.  Although I'm bummed how ugly it is... this other goop around ```error: cannot find symbol``` Showed a conflict using the latest Firebase Dart package.  I reported this as [an issue on the Dart GitHub](https://github.com/flutter/flutter/issues/27156) repository.  dev-vinicius's comment got stuff working:
+>Here i put this in file: android/gradle.properties:
+
+>android.useAndroidX=true
+
+>android.enableJetifier=true
+
+>and changed targetSdkVersion to 28 and it worked. 
+
+
+
+## The Biggest...oh...
+The biggest challenge I had was bumbling through the steps to register the app with the Firebase console.  Based on what I learned:
+- a Firebase project is best served by 1 Flutter app.  This becomes 2 apps in Firebase - 1 for iOS and one for Android.
+- I found it initially confusing to register either an iOS or Android app.  For iOS:
+
+
