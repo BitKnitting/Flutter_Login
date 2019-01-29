@@ -36,12 +36,34 @@ The "deprecated" warnings I ignored.  Although I'm bummed how ugly it is... this
 >android.enableJetifier=true
 
 >and changed targetSdkVersion to 28 and it worked. 
-
-
-
 ## The Biggest...oh...
 The biggest challenge I had was bumbling through the steps to register the app with the Firebase console.  Based on what I learned:
 - a Firebase project is best served by 1 Flutter app.  This becomes 2 apps in Firebase - 1 for iOS and one for Android.
-- I found it initially confusing to register either an iOS or Android app.  For iOS:
+### iOS
+- I found it initially confusing to register either an iOS or Android app.  For iOS, [this section of Andrea's video](https://youtu.be/BNOUtPSN-kA?list=PLNnAcB93JKV9iZ2cwk9MEx3_JG8BRikMP&t=885) (i.e.: 14:45 in on Flutter & Firebase Auth 02) provided an excellent walk through.
+### Android
+Andrea's videos did not cover Android.  If it did, he would have needed to change a few things.  
+#### ListView
+In the code the main thing is going from a Column widget to a ListView widget.  When I used the Column widget, the keyboard caused Flutter to let me know it did not have enough room for the UI.  I.e.: in login_page.dart use ListView:
+```
+child: ListView(
+    children: <Widget>[
+         _showLogo(),
+```                
+#### Adding Firebase Dart Package
+Refer to the challenges I noted earlier.
+#### Letting Gradle Know
+There are two gradle files that need to be modified:
+- android/app/build.gradle  
+  - add `implementation 'com.google.firebase:firebase-core:16.0.1'` to the dependencies section.
+  - put `apply plugin: 'com.google.gms.google-services'` as the last line of the file.  
+- android/build.gradle  
+  - add `        classpath 'com.google.gms:google-services:4.0.1'` to the dependencies section.
+## Validators
+I was impressed with the TextFormField widget's ability to use validators.  For example, the one I have for zip code check:  
+```
+validator: (value) => _validateUSZip(value),
+```
+It was extremely easy to add UI widgets that looked nice and responded as expected.  
 
 
